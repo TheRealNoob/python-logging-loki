@@ -41,7 +41,7 @@ class LokiHandler(logging.Handler):
         url: str,
         tags: Optional[dict] = None,
         auth: Optional[emitter.BasicAuth] = None,
-        version: Optional[str] = None,
+        version: Optional[str] = "1",
     ):
         """
         Create new Loki logging handler.
