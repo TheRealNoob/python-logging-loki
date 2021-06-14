@@ -54,8 +54,20 @@ handler = logging_loki.LokiHandler(
 )
 ```
 
+# Kubernetes multitenancy
+
+Promtail supports querying kubernetes for the name of the tenant (namespace) that your pod is running under.  This lib can't query that without kubectl and that would be a lot of code for this little library, but we can allow you to staticly define the tenant, and we will add that as a header. This would allow you to use the same process flow for promtail and this library.
+
+```python
+handler = logging_loki.LokiHandler(
+    url="https://my-loki-instance/loki/api/v1/push",
+    headers={"X-Scope-OrgID": "example-id"},
+)
+```
+
 # Loki >= 0.4.0 support
 This lib defaults to support for Loki version >= 0.4.0.  If you still use an earlier version, you can specify that support.
+
 ```python
 handler = logging_loki.LokiHandler(
     url="https://my-loki-instance/api/prom/push",
