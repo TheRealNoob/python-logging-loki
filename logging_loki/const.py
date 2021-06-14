@@ -4,7 +4,7 @@ import string
 from typing import Tuple
 
 #: Default Loki emitter version.
-emitter_ver: str = "0"
+emitter_ver: str = "1"
 #: Size of LRU cache for LogQL label formatting.
 format_label_lru_size: int = 256
 
