@@ -9,14 +9,13 @@ python-logging-loki
 Python logging handler for Loki.  
 https://grafana.com/loki
 
-Installation
-============
+# Installation
+
 ```bash
 pip install python-logging-loki
 ```
 
-Usage
-=====
+# Usage
 
 ```python
 import logging
@@ -25,27 +24,48 @@ import logging_loki
 
 handler = logging_loki.LokiHandler(
     url="https://my-loki-instance/loki/api/v1/push", 
-    tags={"application": "my-app"},
-    auth=("username", "password"),
+    tags={"service": "my-app"},
 )
 
 logger = logging.getLogger("my-logger")
 logger.addHandler(handler)
 logger.error(
     "Something happened", 
-    extra={"tags": {"service": "my-service"}},
+    extra={"tags": {"host": "hostname"}},
 )
 ```
 
-Example above will send `Something happened` message along with these labels:
+Above example will send a log message of `Something happened` along with these labels:
 - Default labels from handler
 - Message level as `level`
-- Logger's name as `logger` 
+- Logger's name as `logger`
 - Labels from `tags` item of `extra` dict
 
-*Note: `logging_loki` defaults to support for Loki version >= 0.4.0.  If you need support for earlier versions you should add `version = "0"` as an argument to `LokiHandler()`*
+# Auth
 
-The given example is blocking (i.e. each call will wait for the message to be sent).  
+Loki has no native support for authentication.  Their expectation is that it should be handled by a middle layer such as Nginx.  See official [documentation](https://grafana.com/docs/loki/latest/operations/authentication/).
+
+This lib has support for basic auth, but not for OAuth2.
+
+```python
+handler = logging_loki.LokiHandler(
+    url="https://my-loki-instance/loki/api/v1/push",
+    auth=("username", "password"),
+)
+```
+
+# Loki >= 0.4.0 support
+This lib defaults to support for Loki version >= 0.4.0.  If you still use an earlier version, you can specify that support.
+```python
+handler = logging_loki.LokiHandler(
+    url="https://my-loki-instance/api/prom/push",
+    version = "0",
+)
+```
+
+# Multithread support
+
+The above example is blocking (i.e. each call will wait for the message to be sent).  
 But you can use the built-in `QueueHandler` and` QueueListener` to send messages in a separate thread.  
 
 ```python
