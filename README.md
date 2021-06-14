@@ -27,7 +27,6 @@ handler = logging_loki.LokiHandler(
     url="https://my-loki-instance/loki/api/v1/push", 
     tags={"application": "my-app"},
     auth=("username", "password"),
-    version="1",
 )
 
 logger = logging.getLogger("my-logger")
@@ -40,9 +39,11 @@ logger.error(
 
 Example above will send `Something happened` message along with these labels:
 - Default labels from handler
-- Message level as `serverity`
+- Message level as `level`
 - Logger's name as `logger` 
 - Labels from `tags` item of `extra` dict
+
+*Note: `logging_loki` defaults to support for Loki version >= 0.4.0.  If you need support for earlier versions you should add `version = "0"` as an argument to `LokiHandler()`*
 
 The given example is blocking (i.e. each call will wait for the message to be sent).  
 But you can use the built-in `QueueHandler` and` QueueListener` to send messages in a separate thread.  
